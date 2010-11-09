@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using doCS.Models;
+using NHibernate;
 
 namespace doCS.Web.Helpers.Implimentation {
 	public class EntityCache {
 
+		private readonly ISession DbSession;
 
 		private List<Namespace> AllNamespaces { get; set; }
 		private List<Namespace> _CurrentNamespaces;
@@ -20,7 +22,8 @@ namespace doCS.Web.Helpers.Implimentation {
 		private List<doCS.Models.Type> _CurrentTypes;
 		public IEnumerable<doCS.Models.Type> CurrentTypes { get { return _CurrentTypes; } }
 
-		public EntityCache() {
+		public EntityCache(ISession session) {
+			DbSession = session;
 		}
 
 		public void Initialize(IEnumerable<Namespace> allNamespaces, IEnumerable<Assembly> assemblies, IEnumerable<doCS.Models.Type> types) {
@@ -70,15 +73,35 @@ namespace doCS.Web.Helpers.Implimentation {
 			return AllAssemblies.Except(CurrentAssemblies);
 		}
 
-		public doCS.Models.Type FindTypeByName(string name) {
-			doCS.Models.Type type = CurrentTypes.FirstOrDefault(x => x.Name == name);
+		public doCS.Models.Type FindTypeByName(string name, string assemblyName, string namespaceName) {
+			doCS.Models.Type type = CurrentTypes.FirstOrDefault(x => x.Name == name && x.Assembly.Name == assemblyName && x.Namespace.Name == namespaceName);
 			if (type != null)
 				return type;
-			type = AllTypes.FirstOrDefault(x => x.Name == name);
+			type = AllTypes.FirstOrDefault(x => x.Name == name && x.Assembly.Name == assemblyName && x.Namespace.Name == namespaceName);
 			if (type != null)
 				_CurrentTypes.Add(type);
 			return type;
 		}
+
+		public doCS.Models.Type FindOrCreateType(string name, string assemblyName, string namespaceName, Action<doCS.Models.Type> typeAction) {
+			bool isCurrent = false;
+			doCS.Models.Type type = CurrentTypes.FirstOrDefault(x => x.Name == name && x.Assembly.Name == assemblyName && x.Namespace.Name == namespaceName);
+			//if it's not already a current type then check AllTypes
+			if (type == null) {
+				type = AllTypes.FirstOrDefault(x => x.Name == name && x.Assembly.Name == assemblyName && x.Namespace.Name == namespaceName);
+				if (type != null)
+					_CurrentTypes.Add(type);
+			} else
+				isCurrent = true;
+			//if we still don't have a type then create a new one
+			if (type == null) {
+				type = new doCS.Models.Type();
+				_CurrentTypes.Add(type);
+			}
+			if (isCurrent == false)
+				typeAction(type);
+			return type;
+		} 
 
 		public void AddType(doCS.Models.Type type) {
 			_CurrentTypes.Add(type);

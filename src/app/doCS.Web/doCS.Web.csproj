@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\build\web\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -113,6 +113,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Implimentation\ExtractorData.cs" />
+    <Compile Include="Helpers\Implimentation\PersistorContext.cs" />
     <Compile Include="Models\Type\TypeListItem.cs" />
     <Compile Include="Models\Type\TypeSearch.cs" />
     <Compile Include="ViewHelpers\ViewPage.cs">

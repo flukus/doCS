@@ -88,13 +88,6 @@ namespace doCS.Web.Helpers.Implimentation {
 
 		}
 
-		private void UpdateBaseType(doCS.Models.Type type, TypeData typeData, Project project) {
-			doCS.Models.Type baseType = null;
-			if (!string.IsNullOrEmpty(typeData.BaseTypeName))
-				baseType = GetOrCreateType(typeData.BaseTypeName, project);
-			type.BaseType = baseType;
-		}
-
 		private void UpdateInterfaces(doCS.Models.Type type, TypeData typeData, Project project) {
 			List<doCS.Models.Type> interfaces = new List<doCS.Models.Type>();
 			foreach (string interfaceName in typeData.Interfaces) {
@@ -140,20 +133,28 @@ namespace doCS.Web.Helpers.Implimentation {
 			return assembly;
 		}
 
-		private doCS.Models.Type GetOrCreateType(string assemblyQualifiedName, Project project) {
-			Namespace ns = GetOrCreateNamespace(AssemblyQualifiedName.GetNamespaceName(assemblyQualifiedName), project);
-			Assembly assembly = GetOrCreateAssembly(AssemblyQualifiedName.GetAssemblyName(assemblyQualifiedName), project);
-			string typeName = AssemblyQualifiedName.GetTypeName(assemblyQualifiedName);
-			doCS.Models.Type type = EntityCache.FindTypeByName(typeName);
-			if (type == null) {
-				type = new doCS.Models.Type() {
-					Name = typeName,
-				};
+		private doCS.Models.Type GetOrCreateType(TypeData typeData, ExtractorData extractorData) {
+			Namespace ns = GetOrCreateNamespace(AssemblyQualifiedName.GetNamespaceName(typeData.Name), extractorData.Project);
+			Assembly assembly = GetOrCreateAssembly(AssemblyQualifiedName.GetAssemblyName(typeData.Name), extractorData.Project);
+			string typeName = AssemblyQualifiedName.GetTypeName(typeData.Name);
+			doCS.Models.Type foundType = EntityCache.FindOrCreateType(typeName, assembly.Name, ns.Name, (doCS.Models.Type type) => {
+				type.Name = typeName;
 				type.Namespace = ns;
 				type.Assembly = assembly;
-				EntityCache.AddType(type);
-			} 
-			return type;
+				type.BaseType = GetBaseType(typeData, extractorData);
+				UpdateGenericArguments(type, typeData);
+				UpdateInterfaces(type, typeData, project);
+			});
+			return foundType;
+		}
+
+		private doCS.Models.Type GetBaseType(TypeData typeData, ExtractorData extractorData) {
+			doCS.Models.Type baseType = null;
+			if (!string.IsNullOrEmpty(typeData.BaseTypeName)) {
+				var baseTypeData = extractorData.ProjectData.AllTypes[typeData.BaseTypeName];
+				baseType = GetOrCreateType(baseTypeData, extractorData);
+			}
+			return baseType;
 		}
 
 		private void FillEntityCache(Project project) {
