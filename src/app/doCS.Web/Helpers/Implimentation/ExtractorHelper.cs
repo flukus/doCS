@@ -1,0 +1,167 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using NHibernate;
+using doCS.Models;
+using doCS.Extractor;
+
+namespace doCS.Web.Helpers.Implimentation {
+	public class ExtractorHelper : IExtractorHelper {
+		private readonly ISession DbSession;
+		private readonly IExtractor Extractor;
+		private readonly EntityCache EntityCache;
+
+		public ExtractorHelper(ISession session, IExtractor extractor) {
+			DbSession = session;
+			Extractor = extractor;
+			EntityCache = new EntityCache();
+		}
+
+		public void Extract(ProjectSettings projectSettings) {
+
+			FillEntityCache(projectSettings.Project);
+			ProjectData projectData = Extractor.Extract((IExtractorContext context) => {
+
+				string[] assemblyFileNames = projectSettings.IncludedAssemblies.Split(new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+				string[] xmlFileNames = projectSettings.IncludedXmlFiles.Split(new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+
+				foreach (string assemblyFileName in assemblyFileNames)
+					context.AddAssembly(assemblyFileName);
+				foreach (string xmlFileName in xmlFileNames)
+					context.AddXmlFile(xmlFileName);
+
+			});
+			projectData.ProjectName = projectSettings.Project.Name;
+
+			foreach (var typeData in projectData.AllTypes.Values) {
+				doCS.Models.Type type = GetOrCreateType(typeData.Name, projectSettings.Project);
+				if (type.XmlDocumentation == null)
+					type.XmlDocumentation = new XmlDocumentation();
+				type.XmlDocumentation.XmlComments = (string.IsNullOrEmpty(typeData.XmlDocumentation)) ? "" : typeData.XmlDocumentation;
+				UpdateGenericArguments(type, typeData);
+				UpdateBaseType(type, typeData, projectSettings.Project);
+				UpdateInterfaces(type, typeData, projectSettings.Project);
+			}
+
+
+			using (var transaction = DbSession.BeginTransaction()) {
+				foreach (var type in EntityCache.GetRemovedTypes())
+					DbSession.Delete(type);
+				foreach (var ns in EntityCache.GetRemovedNamespaces())
+					DbSession.Delete(ns);
+				foreach (var ass in EntityCache.GetRemovedAssemblies())
+					DbSession.Delete(ass);
+				DbSession.Persist(projectSettings.Project);
+				foreach (var ns in EntityCache.CurrentNamespaces)
+					DbSession.Persist(ns);
+				foreach (var ass in EntityCache.CurrentAssemblies)
+					DbSession.Persist(ass);
+				foreach (var type in EntityCache.CurrentTypes)
+					DbSession.Persist(type);
+				transaction.Commit();
+				DbSession.Flush();
+			}
+
+		}
+
+		private void UpdateGenericArguments(doCS.Models.Type type, TypeData typeData) {
+			if (type.GenericArguments.Count == 0 && typeData.GenericArguments.Count == 0)
+				return;
+			if (type.GenericArguments.Count > 0 && typeData.GenericArguments.Count == 0) {
+				type.GenericArguments.Clear();
+				return;
+			}
+			//make sure the list is the correct length
+			for (int excess = typeData.GenericArguments.Count; excess < type.GenericArguments.Count; excess++)
+				type.GenericArguments.Remove(type.GenericArguments.ElementAt(excess));
+			for (int incess = type.GenericArguments.Count; incess < typeData.GenericArguments.Count; incess++)
+				type.GenericArguments.Add(new GenericArgument());
+			int i = 0;
+			for (i = 0; i < typeData.GenericArguments.Count && i < type.GenericArguments.Count; i++) {
+				var genericParamterData = typeData.GenericArguments[i];
+				var genericParamter = type.GenericArguments.ElementAt(i);
+				genericParamter.Type = type;
+				genericParamter.Name = genericParamterData.Name;
+				genericParamter.ArgumentOrder = (short)i;
+			}
+
+		}
+
+		private void UpdateBaseType(doCS.Models.Type type, TypeData typeData, Project project) {
+			doCS.Models.Type baseType = null;
+			if (!string.IsNullOrEmpty(typeData.BaseTypeName))
+				baseType = GetOrCreateType(typeData.BaseTypeName, project);
+			type.BaseType = baseType;
+		}
+
+		private void UpdateInterfaces(doCS.Models.Type type, TypeData typeData, Project project) {
+			List<doCS.Models.Type> interfaces = new List<doCS.Models.Type>();
+			foreach (string interfaceName in typeData.Interfaces) {
+				var interfaceType = GetOrCreateType(interfaceName, project);
+				interfaces.Add(interfaceType);
+			}
+			//if any type have been added then add the relation
+			foreach (var interfaceType in interfaces) {
+				if (!type.Interfaces.Contains(interfaceType))
+					type.Interfaces.Add(interfaceType);
+			}
+			//if any types have been removed then remove the relation
+			List<doCS.Models.Type> removedInterfaces = new List<doCS.Models.Type>();
+			foreach (var interfaceType in type.Interfaces) {
+				if (!interfaces.Contains(interfaceType))
+					removedInterfaces.Add(interfaceType);
+			}
+			type.Interfaces.RemoveAll(removedInterfaces);
+		}
+
+		private Namespace GetOrCreateNamespace(string namespaceName, Project project) {
+			Namespace ns = null;
+			ns = EntityCache.FindNamespaceByName(namespaceName);
+			if (ns == null) {
+				ns = new Namespace() {
+					Name = namespaceName,
+					Project = project
+				};
+				EntityCache.AddNamespace(ns);
+			}
+			return ns;
+		}
+
+		private Assembly GetOrCreateAssembly(string assemblyName, Project project) {
+			Assembly assembly = EntityCache.FindAssemblyByName(assemblyName);
+			if (assembly == null) {
+				assembly = new Assembly() {
+					Name = assemblyName,
+					Project = project
+				};
+				EntityCache.AddAssembly(assembly);
+			}
+			return assembly;
+		}
+
+		private doCS.Models.Type GetOrCreateType(string assemblyQualifiedName, Project project) {
+			Namespace ns = GetOrCreateNamespace(AssemblyQualifiedName.GetNamespaceName(assemblyQualifiedName), project);
+			Assembly assembly = GetOrCreateAssembly(AssemblyQualifiedName.GetAssemblyName(assemblyQualifiedName), project);
+			string typeName = AssemblyQualifiedName.GetTypeName(assemblyQualifiedName);
+			doCS.Models.Type type = EntityCache.FindTypeByName(typeName);
+			if (type == null) {
+				type = new doCS.Models.Type() {
+					Name = typeName,
+				};
+				type.Namespace = ns;
+				type.Assembly = assembly;
+				EntityCache.AddType(type);
+			} 
+			return type;
+		}
+
+		private void FillEntityCache(Project project) {
+			var assemblies = DbSession.QueryOver<Assembly>().Where(x => x.Project == project).List<Assembly>();
+			var namespaces = DbSession.QueryOver<Namespace>().Where(x => x.Project == project).List<Namespace>().Distinct();
+			var types = DbSession.QueryOver<doCS.Models.Type>().JoinQueryOver<Assembly>(x => x.Assembly).Where(x => x.Project == project).List<doCS.Models.Type>();
+			EntityCache.Initialize(namespaces, assemblies, types);
+		}
+
+	}
+}

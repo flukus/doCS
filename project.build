@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+	<project name="doCS" default="build" basedir=".">
+
+	<loadtasks assembly="packages\FluentMigrator.0.9.0.0\tools\FluentMigrator.NAnt.dll" />
+		
+	<property name="debug" value="true" overwrite="false" />
+
+	<target name="init" >
+		<mkdir dir="build" />
+	</target>
+
+	<target name="clean" description="remove all generated files">
+		<fileset id="allartifacts">
+			<include name="build/**/*" />
+		</fileset>
+	</target>
+
+  <target name="build" description="" depends="clean, init">
+		<!--<solution solutionfile="doCS.sln" configuration="debug">
+			<projects>
+				<include name="src\migrate\doCS.Migration/doCS.Migrations.csproj" />
+			</projects>
+		</solution>-->
+  </target>
+
+	<target name="migrate" depends="init, build" >
+		<!--<property name="version" value="-1" overwrite="false" />-->
+		<migrate
+			database="sqlite"
+			connection="Data Source=build/WebDB;Version=3;New=true;"
+			namespace="doCS.Migrations"
+			target="build\migrations\doCS.Migration.dll"
+		/>
+	</target>
+
+	<target name="test" depends="init, build, migrate" >
+		<!--<property name="version" value="-1" overwrite="false" />-->
+		<migrate
+			database="sqlite"
+			connection="Data Source=build/WebDB;Version=3;New=true;"
+			namespace="doCS.Migrations.TestLibrary"
+			target="build\test\doCS.Migrations.Testlibrary.dll"
+		/>
+	</target>
+
+</project>
+

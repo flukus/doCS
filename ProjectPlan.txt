@@ -1,0 +1,25 @@
+
+Version 1:
+
+Be able to produce API documentation of the same quality as existing tools such as doxygen and sandcastle. This should include:
+
+	- Complete documentation with namespaces, types, code examples etc.
+	- nant/msbuild integration
+	- Good API documentation (eat your own dogfood etc)
+
+
+Version 2:
+
+Be able to produce COMPLETE developer documentation including:
+
+	- Genereate Indexes/TOC
+	- Extract usefull topic documentation
+	- Easilly embed process flow and collaboration diagrams
+	- Searchability (google/lucene)
+
+Version 3:
+
+Be able to produce quality user documentation including:
+
+	- The ability to embed complete user documentation in an existing application
+	- present documentation from existing forms

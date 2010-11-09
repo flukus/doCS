@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="doCS.Models" namespace="doCS.Models">
+
+  <class name="Project">
+    <id name="Id">
+      <generator class="guid" />
+    </id>
+    <property name="Name" />
+    <property name="Version" />
+		
+		<set name="Namespaces" table="Namespace" order-by="Name ASC" lazy="true" >
+			<key column="ProjectId"/>
+			<one-to-many class="Namespace" />
+		</set>
+		
+		<set lazy="true" table="Assembly" name="Assemblies" order-by="Name ASC" >
+			<key column="ProjectId"/>
+			<one-to-many class="Assembly" />
+		</set>
+  </class>
+
+	<class name="ProjectSettings">
+		<id name="Id" >
+			<generator class="foreign">
+				<param name="property">Project</param>
+			</generator>
+    </id>
+		<property name="IncludedAssemblies" />
+		<property name="IncludedXmlFiles" />
+		<one-to-one name="Project" class="Project" constrained="true" />
+	</class>
+
+	<class name="Assembly">
+		<id name="Id">
+      <generator class="guid" />
+		</id>
+    <property name="Name" />
+		<many-to-one name="Project" column="ProjectId" fetch="join" />
+	</class>
+
+	<class name="Namespace">
+		<id name="Id">
+      <generator class="guid" />
+		</id>
+    <property name="Name" />
+		<many-to-one name="Project" column="ProjectId" fetch="join" />
+		<set lazy="true" table="Type" name="Types" order-by="Name" inverse="true" >
+			<key column="NamespaceId"/>
+			<one-to-many class="Type" />
+		</set>
+	</class>
+
+	<class name="Type">
+		<id name="Id">
+      <generator class="guid" />
+		</id>
+    <property name="Name" />
+		<many-to-one name="Namespace" column="NamespaceId" />
+		<many-to-one name="Assembly" column="AssemblyId" />
+		<many-to-one name="BaseType" column="BaseTypeId" />
+		<many-to-one name="XmlDocumentation" column="XmlDocumentationId" cascade="all-delete-orphan" />
+		
+		<set lazy="true" table="GenericArgument" name="GenericArguments" order-by="ArgumentOrder" inverse="true" >
+			<key column="TypeId"/>
+			<one-to-many class="GenericArgument" />
+		</set>
+			
+		<set lazy="true" table="Type_Interfaces" name="Interfaces" cascade="save-update" >
+			<key column="TypeId"/>
+			<many-to-many class="Type" column="InterfaceId" />
+		</set>
+		
+	</class>
+
+	<class name="Property">
+		<id name="Id">
+      <generator class="guid" />
+		</id>
+    <property name="Name" />
+	</class>
+
+	<class name="XmlDocumentation">
+		<id name="Id">
+      <generator class="guid" />
+		</id>
+    <property name="XmlComments" />
+	</class>
+
+	<class name="GenericArgument" >
+		<id name="Id">
+      <generator class="guid" />
+		</id>
+    <property name="Name" />
+    <property name="ArgumentOrder" />
+		<many-to-one name="Type" column="TypeId" />
+	</class>
+
+</hibernate-mapping>

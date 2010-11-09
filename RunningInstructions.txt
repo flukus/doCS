@@ -1,0 +1,17 @@
+To run doCS follow these steps:
+
+1. Open the doCS solution file in VS2010
+2. Build -> Rebuild Solution
+3. Open the console the the base directory (nant must be in your path) and type "nant migrate" (You may need to copy the file packages\FluentMigrator.0.9.0.0\lib\35\FluentMigator.dll to packages\FluentMigrator.0.9.0.0\tools)
+4. Start the doCS.Web project from within VS (with the built in web server)
+
+To add a documentation project (only known to work with test project) follow these steps:
+
+1. From the main page click add project.
+2. Enter the project name eg "doCS.TestLibrary"
+3. Enter the full name (including drive) of the doCS.TestLibrary.dll. eg C:\somefolder\doCS\build\test\doCS.TestLibrary.dll
+4. Do the same for the Xml Documentation file. eg C:\somefolder\doCS\build\test\doCS.TestLibrary.xml
+5. Click on submit and be returned to the all projects page.
+5. Clicking on extract will now extract all documentation.
+
+After this you can click on the project name. From here click on namespaces or all types in the top left to see the documentation for this test libray.

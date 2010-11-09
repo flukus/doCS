@@ -1,0 +1,27 @@
+
+
+Why?
+
+Most/all current documentation engines are document generators, a once off generation process that generates HTML/CHM files. doCS intends to be a Documentation Server, a dynamic central 
+(to the organisation) website where documentation will be provided.
+
+doCS is intended to address the following flaws with current documentation generators:
+
+Speed:
+
+Generting documentation can be fairly time consuming and is usually part of a CI long running CI build. While speed isn't important for integration builds it is still a "nice to have"
+feature. This long turn around time can make producing good documentation more time consuming than it should be which usually results in less being written in the first place.
+
+Allot of this speed is lost in generating pages which may or may not ever be read. Because doCS is dynamic this speed penalty is defered until read time.
+
+
+Visibility:
+
+Most organisations have a central place where documentation is published after it is generated but this is often little known and under utlised. doCS intends to be a 
+"third pillar" of developement servers (along with a CI Server and SCM Server) where documenation from all projects will be shared. It is hoped that this will increase visibiliy and
+, in turn, quality and quantity of documentation.
+
+
+Dynamic:
+
+Just as dynamic website are far more capable than static ones we hope that serving documentation dynamicly will open up far more doors for USEFULL representation and quick access.
