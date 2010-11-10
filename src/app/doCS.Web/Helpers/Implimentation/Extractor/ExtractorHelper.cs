@@ -8,19 +8,16 @@ using doCS.Extractor;
 
 namespace doCS.Web.Helpers.Implimentation.Extractor {
 	public class ExtractorHelper : IExtractorHelper {
-		private readonly ISession DbSession;
 		private readonly IExtractor Extractor;
-		private readonly ProjectUpdater EntityCache;
+		private readonly ProjectUpdaterProvider ProjectUpdaterProvider;
 
-		public ExtractorHelper(ISession session, IExtractor extractor) {
-			DbSession = session;
+		public ExtractorHelper(ProjectUpdaterProvider projectUpdaterProvider, IExtractor extractor) {
+			ProjectUpdaterProvider = projectUpdaterProvider;
 			Extractor = extractor;
-			EntityCache = new ProjectUpdater();
 		}
 
 		public void Extract(ProjectSettings projectSettings) {
 
-			FillEntityCache(projectSettings.Project);
 			ProjectData projectData = Extractor.Extract((IExtractorContext context) => {
 
 				string[] assemblyFileNames = projectSettings.IncludedAssemblies.Split(new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
@@ -34,62 +31,46 @@ namespace doCS.Web.Helpers.Implimentation.Extractor {
 			});
 			projectData.ProjectName = projectSettings.Project.Name;
 
-			ExtractorData extractorData = new ExtractorData(projectData, projectSettings.Project);
-			foreach (var typeData in projectData.AllTypes.Values) {
-				doCS.Models.Type type = GetOrCreateType(typeData, extractorData);
-			}
+			ProjectUpdaterProvider.UpdateProject(projectSettings.Project, (updater) => {
+				ExtractorData extractorData = new ExtractorData(projectData, projectSettings.Project, updater);
+				foreach (var typeData in projectData.AllTypes.Values) {
+					doCS.Models.Type type = GetOrCreateType(typeData, extractorData);
+				}
+			});
 
-
-			using (var transaction = DbSession.BeginTransaction()) {
-				foreach (var type in EntityCache.GetRemovedTypes())
-					DbSession.Delete(type);
-				foreach (var ns in EntityCache.GetRemovedNamespaces())
-					DbSession.Delete(ns);
-				foreach (var ass in EntityCache.GetRemovedAssemblies())
-					DbSession.Delete(ass);
-				DbSession.Persist(projectSettings.Project);
-				foreach (var ns in EntityCache.CurrentNamespaces)
-					DbSession.Persist(ns);
-				foreach (var ass in EntityCache.CurrentAssemblies)
-					DbSession.Persist(ass);
-				foreach (var type in EntityCache.CurrentTypes)
-					DbSession.Persist(type);
-				transaction.Commit();
-				DbSession.Flush();
-			}
 
 		}
 
-		private Namespace GetOrCreateNamespace(string namespaceName, Project project) {
+		private Namespace GetOrCreateNamespace(string namespaceName, ExtractorData extractorData) {
 			Namespace ns = null;
-			ns = EntityCache.FindNamespaceByName(namespaceName);
+			ns = extractorData.ProjectUpdater.FindNamespaceByName(namespaceName);
 			if (ns == null) {
 				ns = new Namespace() {
 					Name = namespaceName,
-					Project = project
+					Project = extractorData.Project
 				};
-				EntityCache.AddNamespace(ns);
+				extractorData.ProjectUpdater.AddNamespace(ns);
 			}
 			return ns;
 		}
 
-		private Assembly GetOrCreateAssembly(string assemblyName, Project project) {
-			Assembly assembly = EntityCache.FindAssemblyByName(assemblyName);
+		private Assembly GetOrCreateAssembly(string assemblyName, ExtractorData extractorData) {
+			Assembly assembly = extractorData.ProjectUpdater.FindAssemblyByName(assemblyName);
 			if (assembly == null) {
 				assembly = new Assembly() {
 					Name = assemblyName,
-					Project = project
+					Project = extractorData.Project
 				};
-				EntityCache.AddAssembly(assembly);
+				extractorData.ProjectUpdater.AddAssembly(assembly);
 			}
 			return assembly;
 		}
 
 		private doCS.Models.Type GetOrCreateType(TypeData typeData, ExtractorData extractorData) {
-			Namespace ns = GetOrCreateNamespace(AssemblyQualifiedName.GetNamespaceName(typeData.Name), extractorData.Project);
-			Assembly assembly = GetOrCreateAssembly(AssemblyQualifiedName.GetAssemblyName(typeData.Name), extractorData.Project);
+			Namespace ns = GetOrCreateNamespace(AssemblyQualifiedName.GetNamespaceName(typeData.Name), extractorData);
+			Assembly assembly = GetOrCreateAssembly(AssemblyQualifiedName.GetAssemblyName(typeData.Name), extractorData);
 			string typeName = AssemblyQualifiedName.GetTypeName(typeData.Name);
-			doCS.Models.Type foundType = EntityCache.FindOrCreateType(typeName, assembly.Name, ns.Name, (doCS.Models.Type type) => {
+			doCS.Models.Type foundType = extractorData.ProjectUpdater.FindOrCreateType(typeName, assembly.Name, ns.Name, (doCS.Models.Type type) => {
 				type.Name = typeName;
 				type.Namespace = ns;
 				type.Assembly = assembly;
@@ -159,13 +140,6 @@ namespace doCS.Web.Helpers.Implimentation.Extractor {
 				genericParamter.ArgumentOrder = (short)i;
 			}
 
-		}
-
-		private void FillEntityCache(Project project) {
-			var assemblies = DbSession.QueryOver<Assembly>().Where(x => x.Project == project).List<Assembly>();
-			var namespaces = DbSession.QueryOver<Namespace>().Where(x => x.Project == project).List<Namespace>().Distinct();
-			var types = DbSession.QueryOver<doCS.Models.Type>().JoinQueryOver<Assembly>(x => x.Assembly).Where(x => x.Project == project).List<doCS.Models.Type>();
-			EntityCache.Initialize(namespaces, assemblies, types);
 		}
 
 	}

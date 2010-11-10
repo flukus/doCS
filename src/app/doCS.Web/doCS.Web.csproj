@@ -114,7 +114,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Implimentation\Extractor\ExtractorData.cs" />
-    <Compile Include="Helpers\Implimentation\Extractor\PersistorContext.cs" />
     <Compile Include="Helpers\Implimentation\Extractor\ProjectUpdaterProvider.cs" />
     <Compile Include="Models\Type\TypeListItem.cs" />
     <Compile Include="Models\Type\TypeSearch.cs" />

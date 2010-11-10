@@ -9,21 +9,18 @@ namespace doCS.Web.Helpers.Implimentation.Extractor {
 	public class ProjectUpdater {
 
 		private List<Namespace> AllNamespaces { get; set; }
-		private List<Namespace> _CurrentNamespaces;
+		private readonly List<Namespace> _CurrentNamespaces;
 		public IEnumerable<Namespace> CurrentNamespaces { get { return _CurrentNamespaces; } }
 
 		private List<Assembly> AllAssemblies { get; set; }
-		private List<Assembly> _CurrentAssemblies;
+		private readonly List<Assembly> _CurrentAssemblies;
 		public IEnumerable<Assembly> CurrentAssemblies { get { return _CurrentAssemblies; } }
 
 		private List<doCS.Models.Type> AllTypes { get; set; }
-		private List<doCS.Models.Type> _CurrentTypes;
+		private readonly List<doCS.Models.Type> _CurrentTypes;
 		public IEnumerable<doCS.Models.Type> CurrentTypes { get { return _CurrentTypes; } }
 
-		public ProjectUpdater() {
-		}
-
-		public void Initialize(IEnumerable<Namespace> allNamespaces, IEnumerable<Assembly> assemblies, IEnumerable<doCS.Models.Type> types) {
+		public ProjectUpdater(IEnumerable<Namespace> allNamespaces, IEnumerable<Assembly> assemblies, IEnumerable<doCS.Models.Type> types) {
 			AllNamespaces = new List<Namespace>(allNamespaces);
 			_CurrentNamespaces = new List<Namespace>((int)(allNamespaces.Count() * 1.1));
 

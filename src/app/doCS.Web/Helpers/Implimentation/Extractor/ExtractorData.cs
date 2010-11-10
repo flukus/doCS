@@ -9,10 +9,12 @@ namespace doCS.Web.Helpers.Implimentation.Extractor {
 	public class ExtractorData {
 		public ProjectData ProjectData { get; private set; }
 		public Project Project { get; private set; }
+		public ProjectUpdater ProjectUpdater { get; private set; }
 
-		public ExtractorData(ProjectData projectData, Project project) {
+		public ExtractorData(ProjectData projectData, Project project, ProjectUpdater projectUpdater) {
 			ProjectData = projectData;
 			Project = project;
+			ProjectUpdater = projectUpdater;
 		}
 
 	}
