@@ -53,6 +53,7 @@
     <Compile Include="v1\schema\0000_2010_10_26_16_43_AddDocumentation.cs" />
     <Compile Include="v1\schema\0000_2010_10_26_21_51_AddGenericParameter.cs" />
     <Compile Include="v1\schema\0000_2010_10_28_15_15_ExtendTypeRelations.cs" />
+    <Compile Include="v1\schema\0000_2010_11_10_16_37_AddProperty.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="v1\data\" />

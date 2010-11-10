@@ -77,6 +77,12 @@
       <generator class="guid" />
 		</id>
     <property name="Name" />
+    <property name="GetAccessType" />
+    <property name="SetAccessType" />
+		<many-to-one name="Type" column="TypeId" />
+		<many-to-one name="Overrides" column="OverridesId" />
+		<many-to-one name="Shadows" column="ShadowsId" />
+		<many-to-one name="XmlDocumentation" column="XmlDocumentationId" cascade="all-delete-orphan" />
 	</class>
 
 	<class name="XmlDocumentation">
