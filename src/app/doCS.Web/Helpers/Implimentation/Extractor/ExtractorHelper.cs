@@ -72,6 +72,7 @@ namespace doCS.Web.Helpers.Implimentation.Extractor {
 				if (type.XmlDocumentation == null)
 					type.XmlDocumentation = new XmlDocumentation();
 				type.XmlDocumentation.XmlComments = (string.IsNullOrEmpty(typeData.XmlDocumentation)) ? "" : typeData.XmlDocumentation;
+				UpdateProperties(typeData, type, extractorData);
 			});
 			return foundType;
 		}
@@ -131,6 +132,45 @@ namespace doCS.Web.Helpers.Implimentation.Extractor {
 				genericParamter.ArgumentOrder = (short)i;
 			}
 
+		}
+
+		private void UpdateProperties(TypeData typeData, doCS.Models.Type type, ExtractorData extractorData) {
+			foreach (PropertyData propertyData in typeData.Properties) {
+				//TODO: Skipping generic properties for now (properties with no name
+				if (!string.IsNullOrEmpty(propertyData.TypeName)) {
+					var result = extractorData.ProjectUpdater.FindOrCreateProperty(propertyData.Name, type, (Property property) => {
+						property.Name = propertyData.Name;
+						//var propertyTypeData = extractorData.ProjectData.AllTypes[propertyData.TypeName];
+						property.Type = GetOrCreateType(propertyData.TypeName, extractorData);
+						property.GetAccessType = doCS.Models.AccessType.Public;
+						property.SetAccessType = doCS.Models.AccessType.Public;
+						if (property.XmlDocumentation == null)
+							property.XmlDocumentation = new XmlDocumentation();
+						property.XmlDocumentation.XmlComments = propertyData.Summary;
+						//TODO: update overrides and shadows here
+					});
+				}
+			}
+		}
+
+		private doCS.Models.Type GetOrCreateType(string assemblyQualifiedName, ExtractorData extractorData) {
+			if (extractorData.ProjectData.AllTypes.ContainsKey(assemblyQualifiedName)) {
+				TypeData typeData = extractorData.ProjectData.AllTypes[assemblyQualifiedName];
+				return GetOrCreateType(typeData, extractorData);
+			} else {
+				//this should resolve it from other projects but for now just create the assembly/namespace and type
+				string assemblyName = AssemblyQualifiedName.GetAssemblyName(assemblyQualifiedName);
+				string namespaceName = AssemblyQualifiedName.GetAssemblyName(assemblyQualifiedName);
+				var typeName = AssemblyQualifiedName.GetTypeName(assemblyQualifiedName);
+				var assembly = GetOrCreateAssembly(assemblyName, extractorData);
+				var ns = GetOrCreateNamespace(namespaceName, extractorData);
+				doCS.Models.Type foundType = extractorData.ProjectUpdater.FindOrCreateType(typeName, assembly.Name, ns.Name, (doCS.Models.Type type) => {
+					type.Name = typeName;
+					type.Namespace = ns;
+					type.Assembly = assembly;
+				});
+				return foundType;
+			}
 		}
 
 	}

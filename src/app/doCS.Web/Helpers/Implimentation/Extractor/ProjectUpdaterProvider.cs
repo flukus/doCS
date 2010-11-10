@@ -34,6 +34,8 @@ namespace doCS.Web.Helpers.Implimentation.Extractor {
 
 			using (var transaction = DbSession.BeginTransaction()) {
 				//delete everything in the correct order (in case of dependencies)
+				foreach (var prop in projectUpdater.GetRemovedProperties())
+					DbSession.Delete(prop);
 				foreach (var type in projectUpdater.GetRemovedTypes())
 					DbSession.Delete(type);
 				foreach (var ns in projectUpdater.GetRemovedNamespaces())
@@ -48,6 +50,8 @@ namespace doCS.Web.Helpers.Implimentation.Extractor {
 					DbSession.Persist(ass);
 				foreach (var type in projectUpdater.CurrentTypes)
 					DbSession.Persist(type);
+				foreach (var prop in projectUpdater.CurrentProperties)
+					DbSession.Persist(prop);
 
 				transaction.Commit();
 				DbSession.Flush();
