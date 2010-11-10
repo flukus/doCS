@@ -42,28 +42,19 @@ namespace doCS.Web.Helpers.Implimentation.Extractor {
 		}
 
 		private Namespace GetOrCreateNamespace(string namespaceName, ExtractorData extractorData) {
-			Namespace ns = null;
-			ns = extractorData.ProjectUpdater.FindNamespaceByName(namespaceName);
-			if (ns == null) {
-				ns = new Namespace() {
-					Name = namespaceName,
-					Project = extractorData.Project
-				};
-				extractorData.ProjectUpdater.AddNamespace(ns);
-			}
-			return ns;
+			var result = extractorData.ProjectUpdater.FindOrCreateNamespace(namespaceName, (Namespace ns) => {
+					ns.Name = namespaceName;
+					ns.Project = extractorData.Project;
+			});
+			return result;
 		}
 
 		private Assembly GetOrCreateAssembly(string assemblyName, ExtractorData extractorData) {
-			Assembly assembly = extractorData.ProjectUpdater.FindAssemblyByName(assemblyName);
-			if (assembly == null) {
-				assembly = new Assembly() {
-					Name = assemblyName,
-					Project = extractorData.Project
-				};
-				extractorData.ProjectUpdater.AddAssembly(assembly);
-			}
-			return assembly;
+			var result = extractorData.ProjectUpdater.FindOrCreateAssembly(assemblyName, (Assembly assembly) => {
+					assembly.Name = assemblyName;
+					assembly.Project = extractorData.Project;
+			});
+			return result;
 		}
 
 		private doCS.Models.Type GetOrCreateType(TypeData typeData, ExtractorData extractorData) {

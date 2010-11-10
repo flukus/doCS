@@ -31,50 +31,42 @@ namespace doCS.Web.Helpers.Implimentation.Extractor {
 			_CurrentTypes = new List<doCS.Models.Type>((int)(types.Count() * 1.1));
 		}
 
-		public Namespace FindNamespaceByName(string name) {
-			Namespace ns = _CurrentNamespaces.FirstOrDefault(x => x.Name == name);
+		public Namespace FindOrCreateNamespace(string namespaceName, Action<Namespace> namespaceAction) {
+			Namespace ns = _CurrentNamespaces.FirstOrDefault(x => x.Name == namespaceName);
 			if (ns != null)
 				return ns;
-			ns = AllNamespaces.FirstOrDefault(x => x.Name == name);
-			if (ns != null)
+			ns = AllNamespaces.FirstOrDefault(x => x.Name == namespaceName);
+			if (ns != null) {
 				_CurrentNamespaces.Add(ns);
+			} else {
+				ns = new Namespace();
+				namespaceAction(ns);
+				_CurrentNamespaces.Add(ns);
+			}
 			return ns;
-		}
-
-		public void AddNamespace(Namespace ns) {
-			_CurrentNamespaces.Add(ns);
 		}
 
 		public IEnumerable<Namespace> GetRemovedNamespaces() {
 			return AllNamespaces.Except(CurrentNamespaces);
 		}
 
-		public Assembly FindAssemblyByName(string name) {
-			Assembly assembly = CurrentAssemblies.FirstOrDefault(x => x.Name == name);
+		public Assembly FindOrCreateAssembly(string assemblyName, Action<Assembly> assemblyAction) {
+			Assembly assembly = _CurrentAssemblies.FirstOrDefault(x => x.Name == assemblyName);
 			if (assembly != null)
 				return assembly;
-			assembly = AllAssemblies.FirstOrDefault(x => x.Name == name);
-			if (assembly != null)
+			assembly = AllAssemblies.FirstOrDefault(x => x.Name == assemblyName);
+			if (assembly != null) {
 				_CurrentAssemblies.Add(assembly);
+			} else {
+				assembly = new Assembly();
+				assemblyAction(assembly);
+				_CurrentAssemblies.Add(assembly);
+			}
 			return assembly;
-		}
-
-		public void AddAssembly(Assembly assembly) {
-			_CurrentAssemblies.Add(assembly);
 		}
 
 		public IEnumerable<Assembly> GetRemovedAssemblies() {
 			return AllAssemblies.Except(CurrentAssemblies);
-		}
-
-		public doCS.Models.Type FindTypeByName(string name, string assemblyName, string namespaceName) {
-			doCS.Models.Type type = CurrentTypes.FirstOrDefault(x => x.Name == name && x.Assembly.Name == assemblyName && x.Namespace.Name == namespaceName);
-			if (type != null)
-				return type;
-			type = AllTypes.FirstOrDefault(x => x.Name == name && x.Assembly.Name == assemblyName && x.Namespace.Name == namespaceName);
-			if (type != null)
-				_CurrentTypes.Add(type);
-			return type;
 		}
 
 		public doCS.Models.Type FindOrCreateType(string name, string assemblyName, string namespaceName, Action<doCS.Models.Type> typeAction) {
@@ -96,10 +88,6 @@ namespace doCS.Web.Helpers.Implimentation.Extractor {
 				typeAction(type);
 			return type;
 		} 
-
-		public void AddType(doCS.Models.Type type) {
-			_CurrentTypes.Add(type);
-		}
 
 		public IEnumerable<doCS.Models.Type> GetRemovedTypes() {
 			return AllTypes.Except(CurrentTypes);
