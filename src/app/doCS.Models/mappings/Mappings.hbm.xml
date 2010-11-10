@@ -59,17 +59,22 @@
 		<many-to-one name="Assembly" column="AssemblyId" />
 		<many-to-one name="BaseType" column="BaseTypeId" />
 		<many-to-one name="XmlDocumentation" column="XmlDocumentationId" cascade="all-delete-orphan" />
-		
+
 		<set lazy="true" table="GenericArgument" name="GenericArguments" order-by="ArgumentOrder" inverse="true" >
 			<key column="TypeId"/>
 			<one-to-many class="GenericArgument" />
 		</set>
-			
+
 		<set lazy="true" table="Type_Interfaces" name="Interfaces" cascade="save-update" >
 			<key column="TypeId"/>
 			<many-to-many class="Type" column="InterfaceId" />
 		</set>
-		
+
+		<set lazy="true" table="Property" name="Properties" order-by="Name" inverse="true" >
+			<key column="TypeId"/>
+			<one-to-many class="Property" />
+		</set>
+
 	</class>
 
 	<class name="Property">

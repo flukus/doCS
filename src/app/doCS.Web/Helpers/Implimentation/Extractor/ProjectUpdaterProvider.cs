@@ -21,7 +21,8 @@ namespace doCS.Web.Helpers.Implimentation.Extractor {
 			var assemblies = DbSession.QueryOver<Assembly>().Where(x => x.Project == project).List<Assembly>();
 			var namespaces = DbSession.QueryOver<Namespace>().Where(x => x.Project == project).List<Namespace>().Distinct();
 			var types = DbSession.QueryOver<doCS.Models.Type>().JoinQueryOver<Assembly>(x => x.Assembly).Where(x => x.Project == project).List<doCS.Models.Type>();
-			ProjectUpdater projectUpdater = new ProjectUpdater(namespaces, assemblies, types);
+			var properties = DbSession.QueryOver<Property>().JoinQueryOver(x => x.Type).JoinQueryOver(x => x.Assembly).Where(x => x.Project == project).List();
+			ProjectUpdater projectUpdater = new ProjectUpdater(namespaces, assemblies, types, properties);
 
 			projectUpdaterAction(projectUpdater);
 

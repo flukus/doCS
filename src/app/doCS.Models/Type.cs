@@ -14,10 +14,12 @@ namespace doCS.Models {
 		virtual public XmlDocumentation XmlDocumentation { get; set; }
 		virtual public ISet<GenericArgument> GenericArguments { get; set; }
 		virtual public ISet<Type> Interfaces { get; set; }
+		virtual public ISet<Property> Properties { get; set; }
 
 		public Type() {
 			GenericArguments = new HashedSet<GenericArgument>();
 			Interfaces = new HashedSet<Type>();
+			Properties = new HashedSet<Property>();
 		}
 	}
 }
