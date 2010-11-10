@@ -56,7 +56,7 @@ namespace doCS.Web {
 			builder.RegisterControllers(System.Reflection.Assembly.GetExecutingAssembly());
 			builder.Register(x => SessionFactory.OpenSession()).As<ISession>().HttpRequestScoped();
 			builder.RegisterType<doCS.Web.Helpers.Implimentation.ProjectContext>().As<doCS.Web.Helpers.IProjectContext>().HttpRequestScoped();
-			builder.RegisterType<doCS.Web.Helpers.Implimentation.ExtractorHelper>().As<doCS.Web.Helpers.IExtractorHelper>().HttpRequestScoped();
+			builder.RegisterType<doCS.Web.Helpers.Implimentation.Extractor.ExtractorHelper>().As<doCS.Web.Helpers.IExtractorHelper>().HttpRequestScoped();
 
 			//register extractor dependencies
 			builder.RegisterType<doCS.Extractor.Implementation.Extractor>().As<doCS.Extractor.IExtractor>().HttpRequestScoped();

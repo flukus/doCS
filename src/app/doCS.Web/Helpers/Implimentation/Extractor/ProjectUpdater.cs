@@ -5,8 +5,8 @@ using System.Web;
 using doCS.Models;
 using NHibernate;
 
-namespace doCS.Web.Helpers.Implimentation {
-	public class EntityCache {
+namespace doCS.Web.Helpers.Implimentation.Extractor {
+	public class ProjectUpdater {
 
 		private List<Namespace> AllNamespaces { get; set; }
 		private List<Namespace> _CurrentNamespaces;
@@ -20,7 +20,7 @@ namespace doCS.Web.Helpers.Implimentation {
 		private List<doCS.Models.Type> _CurrentTypes;
 		public IEnumerable<doCS.Models.Type> CurrentTypes { get { return _CurrentTypes; } }
 
-		public EntityCache() {
+		public ProjectUpdater() {
 		}
 
 		public void Initialize(IEnumerable<Namespace> allNamespaces, IEnumerable<Assembly> assemblies, IEnumerable<doCS.Models.Type> types) {

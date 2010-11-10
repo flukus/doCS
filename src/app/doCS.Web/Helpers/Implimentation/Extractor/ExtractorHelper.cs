@@ -6,16 +6,16 @@ using NHibernate;
 using doCS.Models;
 using doCS.Extractor;
 
-namespace doCS.Web.Helpers.Implimentation {
+namespace doCS.Web.Helpers.Implimentation.Extractor {
 	public class ExtractorHelper : IExtractorHelper {
 		private readonly ISession DbSession;
 		private readonly IExtractor Extractor;
-		private readonly EntityCache EntityCache;
+		private readonly ProjectUpdater EntityCache;
 
 		public ExtractorHelper(ISession session, IExtractor extractor) {
 			DbSession = session;
 			Extractor = extractor;
-			EntityCache = new EntityCache();
+			EntityCache = new ProjectUpdater();
 		}
 
 		public void Extract(ProjectSettings projectSettings) {
