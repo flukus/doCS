@@ -113,15 +113,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\Implimentation\ExtractorData.cs" />
-    <Compile Include="Helpers\Implimentation\PersistorContext.cs" />
+    <Compile Include="Helpers\Implimentation\Extractor\ExtractorData.cs" />
+    <Compile Include="Helpers\Implimentation\Extractor\PersistorContext.cs" />
     <Compile Include="Models\Type\TypeListItem.cs" />
     <Compile Include="Models\Type\TypeSearch.cs" />
     <Compile Include="ViewHelpers\ViewPage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Helpers\Implimentation\EntityCache.cs" />
-    <Compile Include="Helpers\Implimentation\ExtractorHelper.cs" />
+    <Compile Include="Helpers\Implimentation\Extractor\EntityCache.cs" />
+    <Compile Include="Helpers\Implimentation\Extractor\ExtractorHelper.cs" />
     <Compile Include="Helpers\IExtractorHelper.cs" />
     <Compile Include="Helpers\IProjectContext.cs" />
     <Compile Include="Helpers\Implimentation\ProjectContext.cs" />
