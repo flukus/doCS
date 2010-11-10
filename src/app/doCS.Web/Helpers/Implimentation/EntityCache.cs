@@ -8,8 +8,6 @@ using NHibernate;
 namespace doCS.Web.Helpers.Implimentation {
 	public class EntityCache {
 
-		private readonly ISession DbSession;
-
 		private List<Namespace> AllNamespaces { get; set; }
 		private List<Namespace> _CurrentNamespaces;
 		public IEnumerable<Namespace> CurrentNamespaces { get { return _CurrentNamespaces; } }
@@ -22,8 +20,7 @@ namespace doCS.Web.Helpers.Implimentation {
 		private List<doCS.Models.Type> _CurrentTypes;
 		public IEnumerable<doCS.Models.Type> CurrentTypes { get { return _CurrentTypes; } }
 
-		public EntityCache(ISession session) {
-			DbSession = session;
+		public EntityCache() {
 		}
 
 		public void Initialize(IEnumerable<Namespace> allNamespaces, IEnumerable<Assembly> assemblies, IEnumerable<doCS.Models.Type> types) {
