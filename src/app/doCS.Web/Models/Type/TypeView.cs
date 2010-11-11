@@ -18,44 +18,47 @@ namespace doCS.Web.Models {
 
 	}
 
-	public class TypeView  : TypeViewBase {
+	public class TypeView : TypeViewBase {
 
 		public Guid AssemblyId { get; set; }
 		public string AssemblyName { get; set; }
 		public string XmlDocumentation { get; set; }
 		public List<TypeViewBase> BaseClasses { get; set; }
-		public List<TypeViewMember> Members { get; set; }
-		public List<TypeViewProperty> Properties { get; set; }
-		public List<TypeViewMethod> Methods { get; set; }
+		public List<TypeView.Member> Members { get; set; }
+		public List<TypeView.Property> Properties { get; set; }
+		public List<TypeView.Method> Methods { get; set; }
 
 		public TypeView() {
 			BaseClasses = new List<TypeViewBase>();
-			Members = new List<TypeViewMember>();
-			Properties = new List<TypeViewProperty>();
-			Methods = new List<TypeViewMethod>();
+			Members = new List<TypeView.Member>();
+			Properties = new List<TypeView.Property>();
+			Methods = new List<TypeView.Method>();
 		}
 
-	}
 
-	public class TypeViewMember {
-		public Guid Id { get; set; }
-		public string Name { get; set; }
-		public Guid TypeId { get; set; }
-		public string TypeName { get; set; }
-	}
+		public class Member {
+			public Guid Id { get; set; }
+			public string Name { get; set; }
+			public Guid TypeId { get; set; }
+			public string TypeName { get; set; }
+		}
 
-	public class TypeViewProperty {
-		public Guid Id { get; set; }
-		public string Name { get; set; }
-		public Guid TypeId { get; set; }
-		public string TypeName { get; set; }
-	}
 
-	public class TypeViewMethod {
-		public Guid Id { get; set; }
-		public string Name { get; set; }
-		public Guid ReturnTypeId { get; set; }
-		public string ReturnTypeName { get; set; }
+		public class Property {
+			public Guid Id { get; set; }
+			public string Name { get; set; }
+			public Guid TypeId { get; set; }
+			public string TypeName { get; set; }
+		}
+
+
+		public class Method {
+			public Guid Id { get; set; }
+			public string Name { get; set; }
+			public Guid ReturnTypeId { get; set; }
+			public string ReturnTypeName { get; set; }
+		}
+
 	}
 
 }

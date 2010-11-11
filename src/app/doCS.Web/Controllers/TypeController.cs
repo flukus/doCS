@@ -61,7 +61,7 @@ namespace doCS.Web.Controllers {
 			}
 
 			foreach (var property in type.Properties) {
-				viewModel.Properties.Add(new TypeViewProperty() {
+				viewModel.Properties.Add(new TypeView.Property() {
 					Id = property.Id,
 					Name = property.Name,
 					TypeId = property.Type.Id,
