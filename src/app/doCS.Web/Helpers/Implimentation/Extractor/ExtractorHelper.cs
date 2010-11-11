@@ -136,10 +136,11 @@ namespace doCS.Web.Helpers.Implimentation.Extractor {
 
 		private void UpdateProperties(TypeData typeData, doCS.Models.Type type, ExtractorData extractorData) {
 			foreach (PropertyData propertyData in typeData.Properties) {
-				//TODO: Skipping generic properties for now (properties with no name
+				//TODO: Skipping generic properties for now (properties with no name)
 				if (!string.IsNullOrEmpty(propertyData.TypeName)) {
 					var result = extractorData.ProjectUpdater.FindOrCreateProperty(propertyData.Name, type, (Property property) => {
 						property.Name = propertyData.Name;
+						property.DeclaredOn = type;
 						//var propertyTypeData = extractorData.ProjectData.AllTypes[propertyData.TypeName];
 						property.Type = GetOrCreateType(propertyData.TypeName, extractorData);
 						property.GetAccessType = doCS.Models.AccessType.Public;

@@ -47,8 +47,8 @@
 
 		<h3>Properties</h3>
 		<ul>
-			<% foreach (var member in Model.Properties) { %>
-				<li></li>
+			<% foreach (var property in Model.Properties) { %>
+				<li><%: property.Name %></li>
 			<% } %>
 		</ul>
 
@@ -58,5 +58,7 @@
 				<li></li>
 			<% } %>
 		</ul>
+
+		<h3>Extension Methods</h3>
 
 </asp:Content>

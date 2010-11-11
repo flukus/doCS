@@ -59,6 +59,15 @@ namespace doCS.Web.Controllers {
 				viewModel.BaseClasses.Add(typeViewBase);
 				baseType = baseType.BaseType;
 			}
+
+			foreach (var property in type.Properties) {
+				viewModel.Properties.Add(new TypeViewProperty() {
+					Id = property.Id,
+					Name = property.Name,
+					TypeId = property.Type.Id,
+					TypeName = NameHelper.GetNameFor(property.Type)
+				});
+			}
 			return View(viewModel);
 		}
 

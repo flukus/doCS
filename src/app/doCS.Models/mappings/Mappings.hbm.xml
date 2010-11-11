@@ -71,7 +71,7 @@
 		</set>
 
 		<set lazy="true" table="Property" name="Properties" order-by="Name" inverse="true" >
-			<key column="TypeId"/>
+			<key column="DeclaredOnId"/>
 			<one-to-many class="Property" />
 		</set>
 
@@ -82,12 +82,13 @@
       <generator class="guid" />
 		</id>
     <property name="Name" />
+		<many-to-one name="DeclaredOn" column="DeclaredOnId" />
 		<many-to-one name="Type" column="TypeId" />
-    <!--<property name="GetAccessType" />
+    <property name="GetAccessType" />
     <property name="SetAccessType" />
 		<many-to-one name="Overrides" column="OverridesId" />
 		<many-to-one name="Shadows" column="ShadowsId" />
-		<many-to-one name="XmlDocumentation" column="XmlDocumentationId" cascade="all-delete-orphan" />-->
+		<many-to-one name="XmlDocumentation" column="XmlDocumentationId" cascade="all-delete-orphan" />
 	</class>
 
 	<class name="XmlDocumentation">
