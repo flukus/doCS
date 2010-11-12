@@ -14,5 +14,21 @@ namespace doCS.TestLibrary.SimpleClasses {
 		/// Counts Something
 		/// </summary>
 		public int CountOfSomething { get; set; }
+
+		/// <summary>
+		/// A readonly property with a private setter
+		/// </summary>
+		public int ReadOnlyProperty { get; private set; }
+
+		private int PrivateProperty { get; set; }
+
+		protected int ProtextedProperty { get; set; }
+
+		public int GetOnlyProperty { get; set; }
+
+		public int SetOnlyProperty { set { } }
+
+		public ConcreteClass ReferenceToOtherClass { get; set; }
+
 	}
 }
