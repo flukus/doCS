@@ -48,7 +48,7 @@
 		<h3>Properties</h3>
 		<ul>
 			<% foreach (var property in Model.Properties) { %>
-				<li><%: property.Name %></li>
+				<li><%: string.Format("{0} {1} {2} {{ get; {3} set; }}", property.GetAccessor, property.TypeName, property.Name, property.SetAccessor != property.GetAccessor ? property.SetAccessor : "") %></li>
 			<% } %>
 		</ul>
 

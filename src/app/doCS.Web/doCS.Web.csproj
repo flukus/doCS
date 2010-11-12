@@ -51,6 +51,9 @@
     <Reference Include="Autofac.Integration.Web.Mvc">
       <HintPath>..\..\..\packages\Autofac.MVC2.2.2.4.900\lib\NET40\Autofac.Integration.Web.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="AutoMapper">
+      <HintPath>..\..\..\packages\AutoMapper.1.1.0.118\lib\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.Core">
       <HintPath>..\..\..\packages\Castle.Core.2.5.1\lib\NET35\Castle.Core.dll</HintPath>
     </Reference>
@@ -120,6 +123,7 @@
     <Compile Include="Helpers\Implimentation\Extractor\ProjectUpdaterProvider.cs" />
     <Compile Include="Models\Type\TypeListItem.cs" />
     <Compile Include="Models\Type\TypeSearch.cs" />
+    <Compile Include="Models\Type\TypeViewConverter.cs" />
     <Compile Include="ViewHelpers\ViewPage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>

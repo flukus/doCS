@@ -49,6 +49,11 @@ namespace doCS.Web.Models {
 			public string Name { get; set; }
 			public Guid TypeId { get; set; }
 			public string TypeName { get; set; }
+			public string GetAccessor { get; set; }
+			public string SetAccessor { get; set; }
+			public Guid DeclaringTypeId { get; set; }
+			public string DeclaringTypeName { get; set; }
+			public string XmlDocumentation { get; set; }
 		}
 
 

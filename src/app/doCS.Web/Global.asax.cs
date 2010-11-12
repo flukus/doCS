@@ -72,6 +72,8 @@ namespace doCS.Web {
 			_containerProvider = new ContainerProvider(builder.Build());
 			ControllerBuilder.Current.SetControllerFactory(new AutofacControllerFactory(ContainerProvider));
 
+			SetupAutoMapper();
+
 		}
 
 		protected void Application_BeginRequest() {
@@ -86,6 +88,10 @@ namespace doCS.Web {
 			//unbind from the thread
 			//no need to close the session as it is already automatically closed at this point (not sure why)
 			//CurrentSessionContext.Unbind(SessionFactory);
+		}
+
+		private void SetupAutoMapper() {
+			AutoMapper.Mapper.CreateMap<doCS.Models.Type, doCS.Web.Models.TypeView>().ConvertUsing<doCS.Web.Models.Type.TypeViewConverter>();
 		}
 
 	}
