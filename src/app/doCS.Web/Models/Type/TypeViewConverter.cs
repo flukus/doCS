@@ -70,7 +70,7 @@ namespace doCS.Web.Models.Type {
 				}
 				type = type.BaseType;
 			}
-			return result;
+			return result.OrderBy(x => x.Name).ToList();
 		}
 
 		class TypeInfo {

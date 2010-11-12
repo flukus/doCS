@@ -11,7 +11,9 @@ namespace doCS.Web.Helpers {
 		public static string GetNameFor(doCS.Models.Type type) {
 			if (type.Name == "Int32")
 				return "int";
-			if (type.GenericArguments.Count == 0)
+			else if (type.Name == "String")
+				return "string";
+			else if (type.GenericArguments.Count == 0)
 				return type.Name;
 			StringBuilder stringBuilder = new StringBuilder(type.Name);
 			stringBuilder.Append('<');
