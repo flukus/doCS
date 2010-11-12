@@ -147,7 +147,7 @@ namespace doCS.Web.Helpers.Implimentation.Extractor {
 						property.SetAccessType = doCS.Models.AccessType.Public;
 						if (property.XmlDocumentation == null)
 							property.XmlDocumentation = new XmlDocumentation();
-						property.XmlDocumentation.XmlComments = propertyData.Summary;
+						property.XmlDocumentation.XmlComments = propertyData.XmlComments;
 						//TODO: update overrides and shadows here
 					});
 				}

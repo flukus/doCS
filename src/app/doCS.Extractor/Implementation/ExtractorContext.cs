@@ -74,7 +74,7 @@ namespace doCS.Extractor.Implementation
 			if (fullNameIndex.ContainsKey(fullName)) {
 				PropertyData pd = fullNameIndex[fullName].Properties.FirstOrDefault(x => x.Name == propertyName);
 				if (pd != null)
-					pd.Summary = summaryText;
+					pd.XmlComments = summaryText;
 				else {
 				//TODO: log message here
 				}

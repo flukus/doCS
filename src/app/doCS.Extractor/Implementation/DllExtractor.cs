@@ -81,9 +81,36 @@ namespace doCS.Extractor.Implementation {
 			foreach (PropertyInfo property in properties) {
 				PropertyData propertyData = new PropertyData() { 
 					Name = property.Name,
-					TypeName = property.PropertyType.AssemblyQualifiedName
+					TypeName = property.PropertyType.AssemblyQualifiedName,
 				};
-				context.AddProperty(typeInfo, propertyData);
+
+				AccessType getAccessType = AccessType.None;
+				AccessType setAccessType = AccessType.Private;
+				MethodInfo getMethod = property.GetGetMethod(true);
+				MethodInfo setMethod = property.GetSetMethod(true);
+				MethodInfo anyAccessor = getMethod ?? setMethod;
+
+				if (getMethod != null) {
+					if (getMethod.IsFamily)
+						getAccessType = AccessType.Protected;
+					else if (getMethod.IsPublic)
+						getAccessType = AccessType.Public;
+					else
+						getAccessType = AccessType.Private;
+				}
+				if (setMethod != null) {
+					if (setMethod.IsFamily)
+						setAccessType = AccessType.Protected;
+					else if (setMethod.IsPublic)
+						setAccessType = AccessType.Public;
+					context.AddProperty(typeInfo, propertyData);
+				}
+
+				propertyData.GetAccessType = getAccessType;
+				propertyData.SetAccessType = setAccessType;
+				propertyData.IsStatic = anyAccessor.IsStatic;
+				propertyData.IsVirtual = anyAccessor.IsVirtual;
+				propertyData.IsAbstract = anyAccessor.IsAbstract;
 			}
 		}
 
