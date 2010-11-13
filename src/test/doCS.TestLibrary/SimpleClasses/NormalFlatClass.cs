@@ -9,7 +9,7 @@ namespace doCS.TestLibrary.SimpleClasses {
 	/// A Normal class with no interfaces, inheritence etc
 	/// </summary>
 	public class NormalFlatClass {
-		public int Guid { get; set; }
+		public int Id { get; set; }
 		public string Name { get; set; }
 	}
 

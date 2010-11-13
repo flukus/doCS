@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq">
+      <HintPath>..\..\..\packages\Moq.3.1.416.3\lib\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\..\packages\NUnit.2.5.7.10213\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -51,6 +54,7 @@
   <ItemGroup>
     <Compile Include="FormatHelper\AssemblyQualifiedNameTest.cs" />
     <Compile Include="FormatHelper\ReferenceNameTest.cs" />
+    <Compile Include="Implementation\DllExtractorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -61,10 +65,12 @@
       <Project>{A136881A-75B8-4FEF-BDDF-F3FFD405D1D8}</Project>
       <Name>doCS.Extractor</Name>
     </ProjectReference>
+    <ProjectReference Include="..\doCS.TestLibrary\doCS.TestLibrary.csproj">
+      <Project>{36AB3E00-0186-4598-BBC4-81A89391D1BB}</Project>
+      <Name>doCS.TestLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Implementation\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -75,7 +75,7 @@ namespace doCS.Extractor.Implementation {
 		/// <param name="context"></param>
 		/// <param name="typeInfo"></param>
 		/// <param name="type"></param>
-		private void ExtractProperties(IExtractorCollector context, TypeData typeInfo, Type type) {
+		public void ExtractProperties(IExtractorCollector context, TypeData typeInfo, Type type) {
 			//this should only get properties either directly on the type or ovverriden on the type. Properties of base classes should not be added
 			PropertyInfo[] properties = type.GetProperties( BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
 			foreach (PropertyInfo property in properties) {
@@ -103,7 +103,6 @@ namespace doCS.Extractor.Implementation {
 						setAccessType = AccessType.Protected;
 					else if (setMethod.IsPublic)
 						setAccessType = AccessType.Public;
-					context.AddProperty(typeInfo, propertyData);
 				}
 
 				propertyData.GetAccessType = getAccessType;
@@ -111,6 +110,7 @@ namespace doCS.Extractor.Implementation {
 				propertyData.IsStatic = anyAccessor.IsStatic;
 				propertyData.IsVirtual = anyAccessor.IsVirtual;
 				propertyData.IsAbstract = anyAccessor.IsAbstract;
+				context.AddProperty(typeInfo, propertyData);
 			}
 		}
 

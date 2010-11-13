@@ -22,7 +22,7 @@ namespace doCS.TestLibrary.SimpleClasses {
 
 		private int PrivateProperty { get; set; }
 
-		protected int ProtextedProperty { get; set; }
+		protected int ProtectedProperty { get; set; }
 
 		public int GetOnlyProperty { get; set; }
 
