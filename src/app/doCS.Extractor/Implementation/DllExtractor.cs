@@ -8,14 +8,14 @@ using System.Reflection;
 namespace doCS.Extractor.Implementation {
 
 	/// <summary>
-	/// Extracts type/property/method information from a .Net dll and notifies the ExtractorContext
+	/// Extracts type/property/method information from a .Net dll and notifies the IExtractorCollector
 	/// </summary>
-	public class DllExtractor {
+	public class DllExtractor : IDllExtractor {
 
 		/// <summary>
-		/// Extracts type/property/method information from a .Net dll and notifies the ExtractorContext
+		/// Extracts type/property/method information from a .Net dll and notifies the IExtractorCollector
 		/// </summary>
-		public void Extract(ExtractorContext context) {
+		public void Extract(IExtractorCollector context) {
 			//TODO: Either these assemblies or the the entire library should be loaded into a seperate AppDomain
 			foreach (var dll in context.DependantAssemblies) {
 				System.Reflection.Assembly.LoadFrom(dll.FullName);
@@ -31,7 +31,7 @@ namespace doCS.Extractor.Implementation {
 		/// </summary>
 		/// <param name="context">The context to send parameter information to</param>
 		/// <param name="assembly">the assembly to scan</param>
-		private void ExtractTypes(ExtractorContext context, Assembly assembly) {
+		private void ExtractTypes(IExtractorCollector context, Assembly assembly) {
 			foreach (Type type in assembly.GetTypes()) {
 				if (!type.FullName.StartsWith("<>") && !type.FullName.StartsWith("<PrivateImplementationDetails")) {
 					TypeData typeInfo = new TypeData(type.AssemblyQualifiedName);
@@ -59,7 +59,7 @@ namespace doCS.Extractor.Implementation {
 		/// <param name="context"></param>
 		/// <param name="typeInfo"></param>
 		/// <param name="type"></param>
-		private void ExtractGenericArguments(ExtractorContext context, TypeData typeInfo, Type type) {
+		private void ExtractGenericArguments(IExtractorCollector context, TypeData typeInfo, Type type) {
 			if (!type.IsGenericTypeDefinition)
 				return;
 			foreach (Type parameter in type.GetGenericArguments()) {
@@ -75,7 +75,7 @@ namespace doCS.Extractor.Implementation {
 		/// <param name="context"></param>
 		/// <param name="typeInfo"></param>
 		/// <param name="type"></param>
-		private void ExtractProperties(ExtractorContext context, TypeData typeInfo, Type type) {
+		private void ExtractProperties(IExtractorCollector context, TypeData typeInfo, Type type) {
 			//this should only get properties either directly on the type or ovverriden on the type. Properties of base classes should not be added
 			PropertyInfo[] properties = type.GetProperties( BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
 			foreach (PropertyInfo property in properties) {

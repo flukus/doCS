@@ -12,7 +12,7 @@ namespace doCS.Extractor.Implementation
 	/// <summary>
 	/// This is a context object to be used with a single extraction instance. IDisposable is implemented because it creates an AppDomain that requires disposing.
 	/// </summary>
-	public class ExtractorContext : IExtractorContext, IDisposable
+	public class ExtractorContext : IExtractorContext, IExtractorCollector, IDisposable
 	{
 
 		/// <summary>

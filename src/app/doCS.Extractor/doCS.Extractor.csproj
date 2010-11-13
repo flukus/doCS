@@ -42,6 +42,8 @@
   <ItemGroup>
     <Compile Include="AccessType.cs" />
     <Compile Include="GenericArgumentData.cs" />
+    <Compile Include="IDllExtractor.cs" />
+    <Compile Include="IExtractorCollector.cs" />
     <Compile Include="IExtractorContext.cs" />
     <Compile Include="Implementation\DllExtractor.cs" />
     <Compile Include="Implementation\Extractor.cs" />

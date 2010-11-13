@@ -30,5 +30,9 @@ namespace doCS.TestLibrary.SimpleClasses {
 
 		public ConcreteClass ReferenceToOtherClass { get; set; }
 
+		public static int StaticProperty { get; set; }
+
+		public virtual int VirtualProperty { get; set; }
+
 	}
 }
