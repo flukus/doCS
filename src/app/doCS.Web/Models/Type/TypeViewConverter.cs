@@ -65,6 +65,10 @@ namespace doCS.Web.Models.Type {
 						DeclaringTypeName = NameHelper.GetNameFor(property.DeclaringType),
 						GetAccessor = NameHelper.GetNameFor(property.GetAccessType),
 						SetAccessor = NameHelper.GetNameFor(property.SetAccessType),
+						IsAbstract = property.IsAbstract,
+						IsProperty = true,
+						IsStatic = property.IsStatic,
+						IsVirtual = property.IsVirtual,
 						XmlDocumentation = property.XmlDocumentation != null ? property.XmlDocumentation.XmlComments : ""
 					});
 				}

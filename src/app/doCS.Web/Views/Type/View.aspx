@@ -48,7 +48,18 @@
 		<h3>Properties</h3>
 		<ul>
 			<% foreach (var property in Model.Properties) { %>
-				<li><%: string.Format("{0} {1} {2} {{ get; {3} set; }}", property.GetAccessor, property.TypeName, property.Name, property.SetAccessor != property.GetAccessor ? property.SetAccessor : "") %></li>
+				<li>
+					<%: (property.GetAccessor == "unknown") ? property.SetAccessor : property.GetAccessor %>
+					<%: property.IsStatic ? "static" : "" %>
+					<%: property.IsVirtual ? "virtual" : "" %>
+					<%: property.IsAbstract ? "abstract" : "" %>
+					<%: property.TypeName %>
+					<%: property.Name %>
+					<% if (property.IsProperty) { %>
+						<% var setAccessor = (property.SetAccessor != property.GetAccessor && property.GetAccessor != "unknown") ? property.SetAccessor : ""; %>
+						<% setAccessor = setAccessor == "unknown" ? "" : setAccessor + " set; "; %>
+						<%: string.Format("{{ {0} {1} }}", (property.GetAccessor != "unknown") ? "get;" : "", setAccessor) %>
+					<% } %>
 			<% } %>
 		</ul>
 

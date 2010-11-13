@@ -54,6 +54,10 @@ namespace doCS.Web.Models {
 			public Guid DeclaringTypeId { get; set; }
 			public string DeclaringTypeName { get; set; }
 			public string XmlDocumentation { get; set; }
+			public bool IsStatic { get; set; }
+			public bool IsVirtual { get; set; }
+			public bool IsAbstract { get; set; }
+			public bool IsProperty { get; set; }
 		}
 
 

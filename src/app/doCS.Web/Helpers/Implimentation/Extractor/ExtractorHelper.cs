@@ -177,7 +177,16 @@ namespace doCS.Web.Helpers.Implimentation.Extractor {
 		}
 
 		private doCS.Models.AccessType ConvertAccessType(doCS.Extractor.AccessType accessType) {
-			return (doCS.Models.AccessType)accessType;
+			switch (accessType) {
+				case doCS.Extractor.AccessType.Public:
+					return doCS.Models.AccessType.Public;
+				case doCS.Extractor.AccessType.Protected:
+					return doCS.Models.AccessType.Protected;
+				case doCS.Extractor.AccessType.Private:
+					return doCS.Models.AccessType.Private;
+				default:
+					return doCS.Models.AccessType.Unknown;
+			}
 		}
 
 	}
