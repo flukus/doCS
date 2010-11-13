@@ -140,11 +140,13 @@ namespace doCS.Web.Helpers.Implimentation.Extractor {
 				if (!string.IsNullOrEmpty(propertyData.TypeName)) {
 					var result = extractorData.ProjectUpdater.FindOrCreateProperty(propertyData.Name, type, (Property property) => {
 						property.Name = propertyData.Name;
-						property.DeclaredOn = type;
-						//var propertyTypeData = extractorData.ProjectData.AllTypes[propertyData.TypeName];
+						property.DeclaringType = type;
 						property.Type = GetOrCreateType(propertyData.TypeName, extractorData);
-						property.GetAccessType = doCS.Models.AccessType.Public;
-						property.SetAccessType = doCS.Models.AccessType.Public;
+						property.GetAccessType = ConvertAccessType(propertyData.GetAccessType);
+						property.SetAccessType = ConvertAccessType(propertyData.SetAccessType);
+						property.IsAbstract = propertyData.IsAbstract;
+						property.IsStatic = propertyData.IsStatic;
+						property.IsVirtual = propertyData.IsVirtual;
 						if (property.XmlDocumentation == null)
 							property.XmlDocumentation = new XmlDocumentation();
 						property.XmlDocumentation.XmlComments = propertyData.XmlComments;
@@ -172,6 +174,10 @@ namespace doCS.Web.Helpers.Implimentation.Extractor {
 				});
 				return foundType;
 			}
+		}
+
+		private doCS.Models.AccessType ConvertAccessType(doCS.Extractor.AccessType accessType) {
+			return (doCS.Models.AccessType)accessType;
 		}
 
 	}

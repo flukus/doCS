@@ -13,12 +13,15 @@ namespace doCS.Migrations {
 			Create.Table("Property")
 				.WithColumn("Id").AsGuid().PrimaryKey().NotNullable()
 				.WithColumn("Name").AsString(256).NotNullable().WithDefaultValue(null)
-				.WithColumn("DeclaredOnId").AsGuid().NotNullable().ForeignKey().References("FK_Property_DeclaredOn", "Type", new string[] { "Id"})
+				.WithColumn("DeclaringTypeId").AsGuid().NotNullable().ForeignKey().References("FK_Property_DeclaringType", "Type", new string[] { "Id"})
 				.WithColumn("TypeId").AsGuid().NotNullable().ForeignKey().References("FK_Property_Type", "Type", new string[] { "Id"})
 				.WithColumn("OverridesId").AsGuid().Nullable().ForeignKey().References("FK_Property_OverridesProperty", "Property", new string[] { "Id"})
 				.WithColumn("ShadowsId").AsGuid().Nullable().ForeignKey().References("FK_Property_ShadowsProperty", "Property", new string[] { "Id"})
 				.WithColumn("GetAccessType").AsInt32().NotNullable().WithDefaultValue(0)
 				.WithColumn("SetAccessType").AsInt32().NotNullable().WithDefaultValue(0)
+				.WithColumn("IsStatic").AsBoolean().NotNullable().WithDefaultValue(null)
+				.WithColumn("IsVirtual").AsBoolean().NotNullable().WithDefaultValue(null)
+				.WithColumn("IsAbstract").AsBoolean().NotNullable().WithDefaultValue(null)
 				.WithColumn("XmlDocumentationId").AsGuid().Nullable().ForeignKey().References("FK_Property_XmlDocumentation", "XmlDocumentation", new string[] { "Id" })
 			;
 		}

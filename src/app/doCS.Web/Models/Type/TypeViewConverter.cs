@@ -61,8 +61,8 @@ namespace doCS.Web.Models.Type {
 						Name = property.Name,
 						TypeId = property.Type.Id,
 						TypeName = NameHelper.GetNameFor(property.Type),
-						DeclaringTypeId = property.DeclaredOn.Id,
-						DeclaringTypeName = NameHelper.GetNameFor(property.DeclaredOn),
+						DeclaringTypeId = property.DeclaringType.Id,
+						DeclaringTypeName = NameHelper.GetNameFor(property.DeclaringType),
 						GetAccessor = NameHelper.GetNameFor(property.GetAccessType),
 						SetAccessor = NameHelper.GetNameFor(property.SetAccessType),
 						XmlDocumentation = property.XmlDocumentation != null ? property.XmlDocumentation.XmlComments : ""
