@@ -39,30 +39,32 @@
 		</p>
 
 		<h3>Members</h3>
-		<% Html.RenderPartial("_DisplayOptions", DisplayOptions); %>
-		<ul id="members collapsable" >
-			<% foreach (var property in Model.Properties) { %>
-				<li class="<%: property.GetAccessor %> <%: (property.DeclaringTypeId != Model.Id) ? "inherited" : "" %>" >
-					<div class="quickInfo" >
-						<%: (property.GetAccessor == "unknown") ? property.SetAccessor : property.GetAccessor %>
-						<%: property.IsStatic ? "static" : "" %>
-						<%: property.IsVirtual ? "virtual" : "" %>
-						<%: property.IsAbstract ? "abstract" : "" %>
-						<%: Html.ActionLink(property.TypeName, "View", new { id = property.TypeId }) %>
-						<a href="#" ><%: property.Name %></a>
-						<% if (property.IsProperty) { %>
-							<% var setAccessor = (property.SetAccessor != property.GetAccessor && property.GetAccessor != "unknown") ? property.SetAccessor : ""; %>
-							<% setAccessor = setAccessor == "unknown" ? "" : setAccessor + " set; "; %>
-							<%: string.Format("{{ {0} {1} }}", (property.GetAccessor != "unknown") ? "get;" : "", setAccessor) %>
-						<% } %>
-					</div>
-					<div class="extendedInfo" >
-					</div>
-					<div class="documentation" >
-					</div>
-				</li>
-			<% } %>
-		</ul>
+		<div id="members" class="collapsable">
+			<% Html.RenderPartial("_DisplayOptions", DisplayOptions); %>
+			<ul>
+				<% foreach (var property in Model.Properties) { %>
+					<li class="<%: property.GetAccessor %> <%: (property.DeclaringTypeId != Model.Id) ? "inherited" : "" %>" >
+						<div class="quickInfo" >
+							<%: (property.GetAccessor == "unknown") ? property.SetAccessor : property.GetAccessor %>
+							<%: property.IsStatic ? "static" : "" %>
+							<%: property.IsVirtual ? "virtual" : "" %>
+							<%: property.IsAbstract ? "abstract" : "" %>
+							<%: Html.ActionLink(property.TypeName, "View", new { id = property.TypeId }) %>
+							<a href="#" ><%: property.Name %></a>
+							<% if (property.IsProperty) { %>
+								<% var setAccessor = (property.SetAccessor != property.GetAccessor && property.GetAccessor != "unknown") ? property.SetAccessor : ""; %>
+								<% setAccessor = setAccessor == "unknown" ? "" : setAccessor + " set; "; %>
+								<%: string.Format("{{ {0} {1} }}", (property.GetAccessor != "unknown") ? "get;" : "", setAccessor) %>
+							<% } %>
+						</div>
+						<div class="extendedInfo" >
+						</div>
+						<div class="documentation" >
+						</div>
+					</li>
+				<% } %>
+			</ul>
+		</div>
 
 		<h3>Methods</h3>
 		<ul>

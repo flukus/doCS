@@ -2,14 +2,18 @@
 <form action="#" >
 	<fieldset>
 		<legend>Display:</legend>
-		<%: Html.LabelFor(x=>x.ShowPublic) %>
-		<%: Html.CheckBoxFor(x=>x.ShowPublic) %>
-		<%: Html.Label("ShowProtected") %>
-		<%: Html.CheckBoxFor(x=>x.ShowProtected) %>
-		<%: Html.Label("ShowPrivate") %>
-		<%: Html.CheckBoxFor(x=>x.ShowPrivate) %>
-		<%: Html.Label("ShowInherited") %>
-		<%: Html.CheckBoxFor(x=>x.ShowInherited) %>
+		<label for="ShowPublic">Public: </label>
+		<input type="checkbox" name="ShowPublic" <%= Model.ShowPublic ? "checked='checked'" : "" %> value="true" />
+
+		<label for="ShowProtected">Protected: </label>
+		<input type="checkbox" name="ShowProtected" <%= Model.ShowProtected ? "checked='checked'" : "" %> value="true" />
+
+		<label for="ShowPrivate">Private: </label>
+		<input type="checkbox" name="ShowPrivate" <%= Model.ShowPrivate ? "checked='checked'" : "" %> value="true" />
+
+		<label for="ShowInherited">Inherited: </label>
+		<input type="checkbox" name="ShowInherited" <%= Model.ShowInherited ? "checked='checked'" : "" %> value="true" />
+
 	</fieldset>
 </form>
 
