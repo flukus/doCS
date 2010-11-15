@@ -121,6 +121,7 @@
     </Compile>
     <Compile Include="Helpers\Implimentation\Extractor\ExtractorData.cs" />
     <Compile Include="Helpers\Implimentation\Extractor\ProjectUpdaterProvider.cs" />
+    <Compile Include="Models\Type\DisplayOptions.cs" />
     <Compile Include="Models\Type\TypeListItem.cs" />
     <Compile Include="Models\Type\TypeSearch.cs" />
     <Compile Include="Models\Type\TypeViewConverter.cs" />
@@ -155,6 +156,7 @@
     <Content Include="Views\Project\View.aspx" />
     <Content Include="Views\Type\List.aspx" />
     <Content Include="Views\Type\View.aspx" />
+    <Content Include="Views\Type\_DisplayOptions.ascx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

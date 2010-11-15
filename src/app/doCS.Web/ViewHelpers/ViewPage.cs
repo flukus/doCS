@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Autofac.Integration.Web;
 using Autofac;
+using doCS.Web.Models.Type;
 
 namespace doCS.Web.ViewHelpers {
 
@@ -34,5 +35,17 @@ namespace doCS.Web.ViewHelpers {
 				return _XmlDocumentationHelper;
 			}
 		}
+
+		public DisplayOptions DisplayOptions {
+			get {
+				return new DisplayOptions() {
+					ShowPublic = true,
+					ShowPrivate = false,
+					ShowProtected = false,
+					ShowInherited = false
+				};
+			}
+		}
+
 	}
 }
