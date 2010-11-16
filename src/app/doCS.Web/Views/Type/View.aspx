@@ -65,8 +65,14 @@
 							<% } %>
 						</div>
 						<div class="extendedInfo" >
+							Declared On: <%: property.DeclaringTypeName %> Implements: None
 						</div>
 						<div class="documentation" >
+							<% if (XmlDocumentationHelper.HasSummary(property.XmlDocumentation)) { %>
+								<%: XmlDocumentationHelper.GetSummary(property.XmlDocumentation) %>
+							<% } else { %>
+								No Summary
+							<% } %>
 						</div>
 					</li>
 				<% } %>

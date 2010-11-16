@@ -9,21 +9,17 @@
 		var options = $.extend(defaults, options);
 		update();
 
+		$(".extendedInfo", $this).hide();
+		$(".documentation", $this).hide();
+		$(".quickInfo", $this).click(function (event) {
+			var target = $(event.target);
+			var li = target.parent("li");
+			toggleDisplay($(li));
+		});
 		$("input", $this).click(function (eventObj) {
 			update();
 		});
 	};
-
-	$(document).ready(function () {
-		$("fieldset.collapsable").each(function (index, item) {
-			//update(item);
-		});
-		$("fieldset.collapsable input").change(function (eventObj) {
-			$("fieldset.collapsable").each(function (index, item) {
-				//update(item);
-			});
-		});
-	});
 
 	function update() {
 		var form = $("form", $this);
@@ -52,6 +48,20 @@
 				element.hide("slide");
 			}
 		});
+	}
+
+	function toggleDisplay(element) {
+		if ($this.currentDisplay) {
+			$(".extendedInfo", $this.currentDisplay).hide();
+			$(".documentation", $this.currentDisplay).hide();
+			if ($this.currentDisplay[0] == element[0]) {
+				$this.currentDisplay = null;
+				return;
+			}
+		}
+		$(".extendedInfo", element).show("slide");
+		$(".documentation", element).show("slide");
+		$this.currentDisplay = element;
 	}
 
 	function showOption() {
