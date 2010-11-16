@@ -3,35 +3,37 @@
 	//$.fn.vari = "$.fn.vari";
 
 	// $.fn is the object we add our custom function
-	//$.fn.DoSomethingLocal = function()
-	//{
-	//return this.each(function()
-	//{
-	//alert(this.vari);    // would output `undefined`
-	//alert($(this).vari); // would output `$.fn.vari`
-	//});
-	//};
+	$.fn.displayOptions = function (options) {
+		var defaults = {};
+		$this = $(this[0]);
+		var options = $.extend(defaults, options);
+		update();
+
+		$("input", $this).click(function (eventObj) {
+			update();
+		});
+	};
 
 	$(document).ready(function () {
-		$("div.collapsable").each(function (index, item) {
-			update(item);
+		$("fieldset.collapsable").each(function (index, item) {
+			//update(item);
 		});
-		$("div.collapsable input").change(function (eventObj) {
-			$("div.collapsable").each(function (index, item) {
-				update(item);
+		$("fieldset.collapsable input").change(function (eventObj) {
+			$("fieldset.collapsable").each(function (index, item) {
+				//update(item);
 			});
 		});
 	});
 
-	function update(display) {
-		var form = $("form", display);
+	function update() {
+		var form = $("form", $this);
 		var options = {};
 		$(form.serializeArray()).each(function (i, n) {
 			options[n.name] = (n.value == "true") ? true : false;
 		});
-		$("ul li", display).each(function (index, element) {
-			element = $(element);
+		$("ul li", $this).each(function (index, element) {
 			var showItem = true;
+			element = $(element);
 			if (!options.ShowPublic && element.hasClass("public")) {
 				showItem = false;
 			}

@@ -4,7 +4,14 @@
 	<%: Model.Name %>
 </asp:Content>
 
+
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#members").displayOptions({});
+		});
+	</script>
 
     <h1>public class <%: Model.Name %></h1>
 		<h3>Namespace: <%: Model.NamespaceName %></h3>
@@ -38,12 +45,12 @@
 			<% } %>
 		</p>
 
-		<h3>Members</h3>
-		<div id="members" class="collapsable">
+		<fieldset id="members" class="collapsable">
+			<legend>Members</legend>
 			<% Html.RenderPartial("_DisplayOptions", DisplayOptions); %>
 			<ul>
 				<% foreach (var property in Model.Properties) { %>
-					<li class="<%: property.GetAccessor %> <%: (property.DeclaringTypeId != Model.Id) ? "inherited" : "" %>" >
+					<li class="<%: (property.GetAccessor == "unknown") ? property.SetAccessor : property.GetAccessor  %> <%: (property.DeclaringTypeId != Model.Id) ? "inherited" : "" %>" >
 						<div class="quickInfo" >
 							<%: (property.GetAccessor == "unknown") ? property.SetAccessor : property.GetAccessor %>
 							<%: property.IsStatic ? "static" : "" %>
@@ -64,15 +71,16 @@
 					</li>
 				<% } %>
 			</ul>
-		</div>
+		</fieldset>
 
-		<h3>Methods</h3>
-		<ul>
-			<% foreach (var member in Model.Methods) { %>
-				<li></li>
-			<% } %>
-		</ul>
-
-		<h3>Extension Methods</h3>
+		<fieldset>
+			<legend>Methods</legend>
+			<!-- extension methods should be shown here as well -->
+			<ul>
+				<% foreach (var member in Model.Methods) { %>
+					<li></li>
+				<% } %>
+			</ul>
+		</fieldset>
 
 </asp:Content>
